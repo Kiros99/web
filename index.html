@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Regalo de Primer Mes</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: #d0f5d8;
+      font-family: 'Segoe UI', sans-serif;
+      color: #2e7d32;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      margin: 20px;
+      white-space: normal;
+    }
+
+    button {
+      background-color: #81c784;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    .modal {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 12px;
+      max-width: 90%;
+      text-align: center;
+    }
+
+    select {
+      font-size: 1rem;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1 id="mensaje"></h1>
+  <button onclick="abrirFrasco()" id="btnEmociones" style="display:none;">Abrir Frasco de Emociones</button>
+
+  <!-- Modal -->
+  <div class="modal" id="modalFrasco">
+    <div class="modal-content">
+      <h3>¿Cómo te sientes hoy?</h3>
+      <select id="emocion" onchange="mostrarFrase()">
+        <option value="">Selecciona una emoción</option>
+        <option value="Feliz">Feliz</option>
+        <option value="Triste">Triste</option>
+        <option value="Enojada">Enojada</option>
+        <option value="Desmotivada">Desmotivada</option>
+        <option value="Preocupada">Preocupada</option>
+      </select>
+      <p id="frase" style="margin-top: 20px;"></p>
+      <button onclick="cerrarFrasco()">Cerrar</button>
+    </div>
+  </div>
+
+  <script>
+    const mensajeOriginal = `🎁 Feliz primer mes de novios 💖\n\nUn regalo digital para ti\n\nCon mucho amor...\nDe parte de Gabriel 💖`;
+    const mensajeConSaltos = mensajeOriginal.replace(/\n/g, "<br>");
+    let index = 0;
+
+    function animarTexto() {
+      const mensajeElemento = document.getElementById("mensaje");
+      if (index <= mensajeConSaltos.length) {
+        mensajeElemento.innerHTML = mensajeConSaltos.slice(0, index);
+        index++;
+        setTimeout(animarTexto, 60);
+      } else {
+        document.getElementById("btnEmociones").style.display = "inline-block";
+      }
+    }
+
+    const frases = {
+      Feliz: [
+        "Si te salio este mensaje es por que tienes muuuy buena suerte... aprovechalo mi niña",
+        "Me alegra que hoy te sientas bien… ojalá se repita seguido.",
+        "Te juro que verte así me da paz.",
+        "A veces tu alegría me salva sin que lo sepas.",
+        "Qué bueno verte con luz propia. No la apagues por nadie.",
+        "Tu risa me recuerda por qué sigo firme.",
+        "Me encanta que estés bien, eso me da fuerzas.",
+        "Te ves feliz… y eso ya hace que mi día valga.",
+        "Gracias por mostrarme este lado tuyo tan lleno de vida.",
+        "Hoy me haces sentir que todo está en su lugar.",
+        "Me emociona verte disfrutar, sin presiones.",
+        "Tu alegría es de esas que no hacen ruido, pero se siente fuerte.",
+        "Te ves feliz... Me llena de orgullo verte así.",
+        "Qué lindo saber que algo te hizo sonreír de verdad.",
+        "Esto que tenés hoy… no dejes que nadie te lo robe.",
+        "Cuando estás bien, me siento más tranquilo con el mundo.",
+        "No sé qué pasó hoy, pero te hizo bien. Se nota.",
+        "Guardá este momento. Es uno de esos que vale oro.",
+        "Si hoy estás feliz, entonces algo bueno hiciste por ti.",
+        "Ojalá siempre te veas como te veo ahora.",
+        "A veces creo que ni vos sabés lo fuerte que es tu alegría.",
+        "Me hace bien saber que estás en paz contigo.",
+        "No necesitás nada más, hoy ya estás completa.",
+        "Lo mejor de este día es que te siento más cerca, más tú.",
+        "Esta sonrisa tuya no debería apagarse nunca.",
+        "Estoy feliz porque tú lo estás, así de simple.",
+        "No tenés que explicarme nada, solo disfrutalo.",
+        "Cuando estás bien, lo noto aunque no digas nada.",
+        "Me gusta verte feliz… y no tener que hacer nada más.",
+        "Tu alegría es el tipo de cosas que no se fingen.",
+        "Estás brillando y ni cuenta te das.",
+        "Este día tuyo es una de esas cosas que quiero recordar.",
+        "Ojalá este ánimo tuyo dure. Pero si no, acá estaré.",
+        "Sos capaz de crear momentos como este. No lo olvides.",
+        "Tu felicidad también me hace bien.",
+        "Lo que sentís hoy… eso también es amor propio.",
+        "Sos fuerte, sos luz… y hoy lo estás demostrando sin esfuerzo.",
+        "No todos los días te vas a sentir así, pero hoy sí… y está bien disfrutarlo.",
+        "Gracias por dejarme ver esta parte de vos.",
+        "Hoy estás en equilibrio, y eso me alegra.",
+        "Quédate con esa paz que estás sintiendo.",
+        "Lo que tenés hoy no es suerte. Es fruto de lo que sos.",
+        "Tu alegría no necesita ser ruidosa. Es real, y eso basta.",
+        "A veces, lo mejor que podés hacer es estar feliz sin sentir culpa.",
+        "Me gusta esta versión de vos, fuerte y liviana a la vez.",
+        "Si estás feliz, entonces lo estás haciendo bien.",
+        "Disfrutá, sin pensar en nada más. Lo merecés.",
+        "Hoy me hacés sentir que todo va a estar bien.",
+        "Hay algo en vos hoy que me hace respirar distinto.",
+        "Sos vos, completa, sin filtros… y eso me enamora cada vez más.",
+        "Hoy pensé en vos más de lo normal, y ya eso me cambió el día",
+        "Sos de las pocas personas que pueden hacerme sonreír con solo estar",
+        "Te merecés algo bueno hoy, aunque sea una razón para sonreír",
+        "Gracias por existir de la forma en la que existís",
+        "A veces te miro y me doy cuenta de lo mucho que valés",
+        "No sé cómo lo hacés, pero tu presencia mejora todo",
+        "Tenés algo que no se ve, pero se siente fuerte",
+        "Me gustás hasta en tus días raros",
+        "Si hoy no fue tu mejor día, al menos sabé que alguien te quiere fuerte",
+        "Lo bueno de vos no se va, ni en los días grises",
+        "Tenés una forma de ser que deja huella, incluso sin darte cuenta",
+        "Aunque hoy no lo sientas, valés muchísimo",
+        "Sos la calma que muchas veces no sabía que necesitaba",
+        "Ojalá te vieras con los ojos con los que yo te miro",
+        "Hay algo en vos que da ganas de quedarse",
+        "No hace falta que seas perfecta, ya sos especial",
+        "Tu forma de ser cambia el ambiente sin hacer ruido",
+        "Aunque el mundo esté difícil, me alegra tenerte",
+        "Sos como un lugar al que siempre quiero volver",
+        "Tenés luz, incluso cuando no te das cuenta",
+        "Si supieras lo mucho que significás, no dudarías tanto",
+        "Tu sonrisa puede arreglar más de lo que imaginás",
+        "Sos el tipo de persona que hace bien sin buscarlo",
+        "No estás sola, y nunca vas a estar mientras yo esté acá",
+        "Todo mejora un poco cuando vos estás cerca",
+        "Me alegraasssss, Yo te lobo mucho 💖",
+      ],
+      Triste: [
+        "No tienes que cargar con todo sola, yo estoy aquí para ti",
+        "No pasa nada si hoy no puedes con todo, descansa un poco",
+        "Estoy contigo, aunque no digas nada",
+        "Puedes sentirte mal, no tienes que esconderlo",
+        "Si hoy solo puedes llorar, está bien, yo te acompaño",
+        "No estás sola, te lo recuerdo las veces que haga falta",
+        "A veces no tener fuerzas también es parte del proceso",
+        "No quiero que te sientas sola con esto, estoy contigo",
+        "Puedes confiar en que estaré aquí, incluso cuando no hables",
+        "Si te duele, entonces importa, y yo no lo ignoro",
+        "No necesitas tener todas las respuestas, solo tiempo y calma",
+        "Estoy aquí para abrazarte en silencio, si eso necesitas",
+        "No tienes que ser fuerte todo el tiempo, también puedes descansar",
+        "Tu tristeza no me aleja, me dan más ganas de quedarme",
+        "No importa cuánto dure este momento, no te dejaré sola",
+        "No quiero que te esfuerces por estar bien solo por mí",
+        "Estoy aquí para que no tengas que fingir",
+        "Lo que sientes es válido, no lo minimices",
+        "Puedo escucharte, pero también puedo quedarme en silencio contigo",
+        "No tienes que demostrar nada hoy, solo respira",
+        "Si te caes, yo estoy para ayudarte a levantarte, sin prisa",
+        "Quiero que sepas que esto también va a pasar, aunque ahora duela",
+        "Lo que sientes no está mal, está bien sentirlo",
+        "Tu dolor me importa, y no estás sola con él",
+        "Puedes dejar que hoy sea un mal día, no hay problema",
+        "No estás fallando por sentirte así, estás siendo humana",
+        "Quiero que estés bien, pero primero quiero que estés en paz",
+        "Estoy aquí para sostenerte cuando sientas que todo pesa",
+        "No te pido que sonrías, solo que me dejes acompañarte",
+        "No me iré solo porque hoy estés bajita de ánimo",
+        "Puedes confiar en que no me voy cuando más me necesitas",
+        "No tienes que explicarlo todo, a veces solo se siente así",
+        "Estoy contigo incluso cuando no sabes qué decir",
+        "No hay presión por estar bien, yo te acompaño como estés",
+        "No estás sola en esto, lo vamos a atravesar juntos",
+        "Está bien no saber cómo seguir, pero no estás sola",
+        "No tienes que ser perfecta, solo ser tú, como estés hoy",
+        "Te acompaño en este momento, sin condiciones",
+        "Estoy aquí para recordarte que todo va a estar bien, con tiempo",
+        "No importa lo difícil que se sienta, estoy contigo",
+        "Puedes contar conmigo para lo que necesites, incluso si es solo estar",
+        "A veces el mejor paso es solo descansar, y está bien",
+        "No quiero que escondas lo que sientes, quiero que te sientas segura conmigo",
+        "Estoy aquí, incluso en los días que no te reconoces",
+        "Tu tristeza no me aleja, me hace quererte más fuerte",
+        "No necesitas fingir que estás bien, solo sé honesta contigo",
+        "Estoy para ti, en serio, incluso en los días más difíciles",
+        "Tómate el tiempo que necesites, no voy a ningún lado",
+        "Me importas, incluso cuando no tengas ánimo para hablar",
+        "Puedes contar conmigo, aunque el mundo se sienta pesado",
+        "Estare aqui si necesitas ayuda... si algo esta mal... 💖",
+      ],
+      Enojada: [
+        "Entiendo que estés molesta, estoy aquí para escucharte",
+        "No necesito que me grites para saber que algo te duele",
+        "Tu enojo es válido, no te juzgo por sentirlo",
+        "Cuando quieras hablar, yo voy a estar atento",
+        "No te pido que cambies rápido, solo que sepas que te apoyo",
+        "Puedo aguantar tu enojo si eso te ayuda a desahogarte",
+        "No te alejes por estar enojada, quiero estar cerca de vos",
+        "Si necesitas espacio, lo entiendo, pero no te pierdas de mí",
+        "No voy a pelear contigo, prefiero entender qué pasa",
+        "No sos mala por enojarte, sos humana y eso está bien",
+        "Estoy listo para escuchar sin interrumpir ni defenderme",
+        "Tu enojo no cambia lo que siento por vos",
+        "Sé que a veces es difícil controlar lo que sentimos",
+        "No te pido perdón antes de entender, pero sí paciencia",
+        "Puedo esperar el momento justo para hablar y aclarar",
+        "No tenés que aguantar todo sola, podés contar conmigo",
+        "No te pido que sonrías cuando estés enojada",
+        "Si te sentís frustrada, estoy acá para acompañarte",
+        "Tu enojo me importa porque me importa vos",
+        "Cuando quieras bajarlo, me tenés a mí para eso",
+        "No voy a juzgar tu forma de sentir, solo quiero estar contigo",
+        "Me duele verte molesta, pero respeto lo que sentís",
+        "Puedo darte el espacio que necesites sin alejarme",
+        "No te pido que me entiendas siempre, pero yo sí intento entenderte",
+        "Si querés desahogarte, tenés un lugar seguro conmigo",
+        "No te voy a presionar para que cambies rápido",
+        "A veces el enojo es la forma de pedir ayuda, y yo la quiero dar",
+        "Si te equivocas en cómo expresar lo que sentís, igual estoy acá",
+        "No te voy a reprochar que estés molesta conmigo",
+        "Cuando estés lista para hablar, acá voy a estar",
+        "Tu enojo no es un muro, es parte del camino para entendernos",
+        "Puedo manejar tu enojo mejor que tu silencio",
+        "No sos la persona que se enoja, sos mucho más que eso",
+        "Quiero que sepas que puedo esperar tu tiempo para calmarte",
+        "No me voy a rendir con vos solo porque estés molesta",
+        "Tu enojo es real, y yo respeto esa realidad",
+        "No te pido que cambies por mí, solo que me permitas estar ahí",
+        "Si querés espacio, tomátelo, yo no me voy a ir",
+        "No es una pelea, es un momento difícil, y yo quiero pasar por eso contigo",
+        "No voy a pelear para ganar, quiero ganar juntos",
+        "Cuando estés lista para escuchar, acá estoy",
+        "No sos un problema, solo estás enojada, y yo te entiendo",
+        "Tu enojo no borra lo bueno que hay entre nosotros",
+        "No quiero que el enojo nos aleje, quiero que nos acerque",
+        "Estoy dispuesto a aprender de lo que te hace enojar",
+        "Podés contarme lo que te molesta sin miedo",
+        "No voy a responder con enojo a tu enojo",
+        "Estoy acá para que no tengas que cargar eso sola",
+        "Tu enojo es parte de vos, y te sigo queriendo completo",
+        "Cuando pases este enojo, quiero que sepas que te sigo eligiendo",
+        "Aun despues de todo te seguire queriendo... mi amor💖",
+
+      ],
+      Desmotivada: [
+        "No tenés que hacer todo hoy, está bien ir despacio",
+        "Si hoy no tenés ganas, no pasa nada, acá estoy",
+        "No te exijas más de lo que podés dar ahora",
+        "A veces está bien sentirse así, no te juzgo",
+        "No estás sola aunque parezca que sí",
+        "Podés tomar un descanso sin culpa",
+        "No tenés que tener todo resuelto para seguir",
+        "Lo importante es no perder la esperanza, aunque cueste",
+        "No te pido que te levantes de un salto, solo que me dejes acompañarte",
+        "Estar bajoneada no define quién sos",
+        "No hay una línea recta, cada paso cuenta",
+        "Podés sentir que no avanzás y aún así estar creciendo",
+        "No sos menos por no tener ánimo hoy",
+        "Estoy acá para darte fuerza cuando te falte",
+        "No te apures en querer estar bien, cada cosa a su tiempo",
+        "Está bien que no todo sea perfecto",
+        "A veces lo más valioso es parar y respirar",
+        "No te pido que cambies rápido, solo que me dejes estar",
+        "No sos la única que se siente así, te entiendo",
+        "Podés contar conmigo para lo que sea, sin presiones",
+        "Cuando no puedas más, acá estoy para sostenerte",
+        "No necesitás ser fuerte siempre",
+        "Podés permitite sentir y descansar",
+        "No te compares con nadie, estás haciendo lo mejor que podés",
+        "No sos menos por sentirte así",
+        "Si te caés, yo te ayudo a levantar",
+        "Lo que sentís hoy no define tu futuro",
+        "Está bien pedir ayuda, no tenés que hacerlo sola",
+        "No te exijas más, pero tampoco te rindas sin pelear",
+        "Estoy aquí para acompañarte, no para apurarte",
+        "Podés dar un paso pequeño y aún así avanzar",
+        "No te olvides que sos más fuerte de lo que creés",
+        "Cada día es distinto, hoy puede ser difícil y mañana mejor",
+        "No hace falta que todo sea rápido, lo importante es seguir",
+        "Podés tomarte tu tiempo, nadie te apura",
+        "No estás fallando, solo estás pasando un momento difícil",
+        "Estoy acá para darte ánimo cuando te falte",
+        "No sos menos por sentirte así",
+        "Podés descansar sin sentir culpa",
+        "No tenés que demostrar nada a nadie, solo a vos misma",
+        "Cada paso, aunque lento, es un paso adelante",
+        "No estás sola, podés apoyarte en mí cuando quieras",
+        "Estoy aquí para vos, en todo momento",
+        "No importa lo que digan, tu valor no cambia",
+        "Podés permitite sentir y después decidir qué sigue",
+        "No te apresures, el tiempo está de tu lado",
+        "Estoy para sostenerte sin importar qué",
+        "No te rindas, aunque hoy no sepas cómo seguir",
+        "Lo que sentís es real y lo respeto",
+        "Estoy acá, sin apuros, para vos",
+        "A veces es mejor tomarse un descanso... y seguir de a poco... tu puedes💖"
+      ],
+      Preocupada: [
+        "No estás sola en esto, estoy aquí para vos",
+        "Podés contar conmigo para lo que sea, sin miedo",
+        "No hace falta que tengas todas las respuestas ahora",
+        "Estoy para escucharte, sin juzgar ni apurar",
+        "Lo que te preocupa también me importa",
+        "Respirá, vamos a encontrar la forma juntos",
+        "No te cargues sola con todo lo que pasa",
+        "Podemos ir paso a paso, sin apuro",
+        "No te pido que seas fuerte todo el tiempo",
+        "No estás sola, aunque parezca difícil",
+        "Contá conmigo para lo que necesites",
+        "Podés compartir lo que sentís, sin miedo",
+        "A veces preocuparse es parte de cuidar lo que amamos",
+        "No hay problema que no pueda ser enfrentado juntos",
+        "No te agobies, todo tiene solución a su tiempo",
+        "Estoy acá para sostenerte, no para añadir más peso",
+        "No te juzgo por estar preocupada, te entiendo",
+        "Lo importante es que no te quedes sola con eso",
+        "Podemos buscar respuestas juntos, no tenés que hacerlo sola",
+        "Te acompaño en cada paso, por más pequeño que sea",
+        "No te exijas más de lo que podés hoy",
+        "Estoy aquí, sin prisa ni presión",
+        "Tus preocupaciones son válidas, no las ignores",
+        "Si querés hablar, acá estoy para escucharte",
+        "No hace falta que tengas todo resuelto, solo un paso a la vez",
+        "Podés apoyarte en mí, no sos una carga",
+        "Estoy para ayudarte a calmar esos pensamientos",
+        "No estás sola, aunque la mente a veces diga lo contrario",
+        "Lo importante es que no te rindas, aunque sea difícil",
+        "Si querés, podemos buscar soluciones juntos",
+        "No te apures, las cosas se acomodan con tiempo",
+        "Estoy acá para darte fuerza cuando la necesites",
+        "Podés confiar en mí, no te voy a abandonar",
+        "No sos menos por sentir miedo o preocupación",
+        "No estás sola, podés compartir lo que tengas en la cabeza",
+        "Cuando la mente te abrume, recordá que estoy aquí",
+        "No sos responsable de todo, podés soltar un poco",
+        "Te acompaño en lo que sea, sin importar qué",
+        "No necesitas resolverlo todo hoy",
+        "Podés descansar sabiendo que no estás sola",
+        "Estoy aquí para darte calma y acompañarte",
+        "Lo que sentís importa, y yo te apoyo",
+        "No tenés que ser perfecta para manejar todo",
+        "Podés tomarte tu tiempo para procesar lo que pasa",
+        "No estás sola, aunque a veces la cabeza te haga dudar",
+        "Estoy acá para vos, siempre que me necesites",
+        "Tus preocupaciones no definen quién sos",
+        "Podés contar conmigo sin miedo a ser juzgada",
+        "Estoy para sostenerte cuando el peso sea mucho",
+        "Juntos podemos atravesar cualquier cosa",
+        "ay mi amor... todo se pondra bien... con tiempo... 💖",
+      ]
+    };
+
+    function abrirFrasco() {
+      document.getElementById("modalFrasco").style.display = "flex";
+    }
+
+    function cerrarFrasco() {
+      document.getElementById("modalFrasco").style.display = "none";
+      document.getElementById("emocion").value = "";
+      document.getElementById("frase").innerText = "";
+    }
+
+    function mostrarFrase() {
+      const emocion = document.getElementById("emocion").value;
+      if (emocion) {
+        const lista = frases[emocion];
+        const random = lista[Math.floor(Math.random() * lista.length)];
+        document.getElementById("frase").innerText = random;
+      } else {
+        document.getElementById("frase").innerText = "";
+      }
+    }
+
+    animarTexto();
+  </script>
+
+</body>
+</html>
